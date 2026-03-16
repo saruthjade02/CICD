@@ -42,4 +42,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/node-helloworld:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/node-hello-world:latest
