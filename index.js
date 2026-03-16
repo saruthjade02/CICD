@@ -1,19 +1,15 @@
-const http = require('http'); // หรือ express ตามที่คุณใช้
+const request = require('supertest');
+const server = require('./index'); // ดึง server มาจาก index.js
 
-// สมมติว่านี่คือ logic เดิมของคุณ
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello World');
+describe('GET /', () => {
+  it('should return 200 OK and Hello World message', async () => {
+    const res = await request(server).get('/'); // ส่ง server เข้าไป
+    expect(res.statusCode).toEqual(200);
+    expect(res.text).toContain('Hello World');
+  });
+
+  // สำคัญมาก: ปิด server หลัง test เสร็จเพื่อไม่ให้เกิด Open Handles
+  afterAll((done) => {
+    server.close(done);
+  });
 });
-
-const port = 3000;
-
-// --- แก้ไขตรงนี้ ---
-// ถ้าไม่ได้รันผ่าน Test (เช่นรันผ่าน npm start หรือ node index.js) ให้ listen ตามปกติ
-if (require.main === module) {
-    server.listen(port, () => {
-        console.log(`Server running at port ${port}`);
-    });
-}
-
-module.exports = server; // ต้อง export server ออกไปให้ test ใช้
